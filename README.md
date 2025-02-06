@@ -1,1 +1,186 @@
-# benjaminsturisky.github.io
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Benjamin Sturisky</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      background-color: #ffffff;
+      color: #000;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.25em;
+    }
+    /* Social links: black underline on hover */
+    .social {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .social a {
+      text-decoration: none;
+      color: #000;
+      font-weight: bold;
+      border-bottom: 1px solid transparent;
+      transition: border-bottom 0.2s;
+    }
+    .social a:hover {
+      border-bottom: 1px solid #000;
+    }
+
+    hr {
+      margin: 2rem 0;
+      border: 0;
+      border-top: 1px solid #000;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    /* JOBS */
+    .job {
+      margin-bottom: 1.5rem;
+    }
+    /* Only Starknet job gets the vertical line */
+    .job-with-line {
+      border-left: 2px solid #000;
+      padding-left: 10px;
+    }
+    .job-title {
+      font-weight: bold;
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+    .job-role {
+      color: #555;
+      margin-bottom: 0.25rem;
+    }
+    .job-dates {
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    /* PORTFOLIO */
+    .portfolio-link {
+      text-decoration: none;
+      color: #000;
+      font-weight: bold;
+      border-bottom: 1px solid transparent;
+      transition: border-bottom 0.2s;
+    }
+    .portfolio-link:hover {
+      border-bottom: 1px solid #000;
+    }
+    .portfolio-item {
+      margin-bottom: 1.5rem;
+    }
+    .date {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 0.25rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Name + Social Links -->
+  <h1>Benjamin Sturisky</h1>
+  <div class="social">
+    <a href="https://x.com/bsturisky" target="_blank">X</a>
+    <a href="https://t.me/bsturisky" target="_blank">Telegram</a>
+  </div>
+
+  <!-- Work History -->
+  <hr/>
+  <div class="section-title">Work History</div>
+
+  <!-- Only Starknet Foundation has the vertical line -->
+  <div class="job job-with-line">
+    <div class="job-title">Starknet Foundation</div>
+    <div class="job-role">Research/Growth</div>
+    <div class="job-dates">2025 – Present</div>
+  </div>
+
+  <div class="job">
+    <div class="job-title">Delphi Digital</div>
+    <div class="job-role">Research Analyst</div>
+    <div class="job-dates">2024 – 2025</div>
+  </div>
+
+  <div class="job">
+    <div class="job-title">Win Win Gaming</div>
+    <div class="job-role">Consultant</div>
+    <div class="job-dates">2023 – 2024</div>
+  </div>
+
+  <!-- Portfolio -->
+  <hr />
+  <div class="section-title">
+    <a class="portfolio-link" href="https://benjaminsturisky.substack.com" target="_blank">
+      Portfolio
+    </a>
+  </div>
+
+  <div class="portfolio-item">
+    <a class="portfolio-link"
+       href="https://benjaminsturisky.substack.com/p/do-prediction-markets-work"
+       target="_blank">
+      Do Prediction Markets Work?
+    </a>
+    <div class="date">July 31, 2024</div>
+  </div>
+
+  <div class="portfolio-item">
+    <a class="portfolio-link"
+       href="https://benjaminsturisky.substack.com/p/solving-liquidity-fragmentation-through"
+       target="_blank">
+      Solving liquidity fragmentation through chain abstraction
+    </a>
+    <div class="date">July 28, 2024</div>
+  </div>
+
+  <div class="portfolio-item">
+    <a class="portfolio-link"
+       href="https://benjaminsturisky.substack.com/p/solving-liquidity-fragmentation-through"
+       target="_blank">
+      Prediction Markets Explained
+    </a>
+    <div class="date">May 27, 2024</div>
+  </div>
+
+  <div class="portfolio-item">
+    <a class="portfolio-link"
+       href="https://benjaminsturisky.substack.com/p/network-success-token-success"
+       target="_blank">
+      Network Success != Token Success
+    </a>
+    <div class="date">May 13, 2024</div>
+  </div>
+
+  <div class="portfolio-item">
+    <a class="portfolio-link"
+       href="https://benjaminsturisky.substack.com/p/the-power-of-incentives"
+       target="_blank">
+      The Power of Incentives
+    </a>
+    <div class="date">April 14, 2024</div>
+  </div>
+
+</div>
+
+</body>
+</html>

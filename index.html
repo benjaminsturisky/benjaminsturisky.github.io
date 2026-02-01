@@ -1,1165 +1,360 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Benjamin Sturisky</title>
+  <meta name="description" content="Research & Growth. Writing about markets, incentives, and crypto infrastructure.">
 
   <style>
-    :root{
-      --bg: #07080c;
-      --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.70);
-      --faint: rgba(255,255,255,.46);
-
-      --panel: rgba(255,255,255,.06);
-      --panel2: rgba(255,255,255,.09);
-      --border: rgba(255,255,255,.14);
-
-      --shadow: 0 24px 80px rgba(0,0,0,.55);
-      --glow: 0 0 0 1px rgba(255,255,255,.10), 0 22px 70px rgba(0,0,0,.48);
-      --radius: 22px;
-
-      --a1:#7c3aed; /* purple */
-      --a2:#06b6d4; /* cyan */
-      --a3:#22c55e; /* green */
-      --a4:#f97316; /* orange */
-
-      /* ✅ Your hosted file works here (repo root) */
-      --brunson-url: url("/902tvmjs891f1.jpeg");
+    :root {
+      --bg: #0a0a0b;
+      --surface: #111113;
+      --surface-2: #18181b;
+      --border: rgba(255,255,255,0.08);
+      --border-hover: rgba(255,255,255,0.15);
+      --text: rgba(255,255,255,0.92);
+      --text-secondary: rgba(255,255,255,0.64);
+      --text-tertiary: rgba(255,255,255,0.44);
+      --accent: #3b82f6;
+      --accent-subtle: rgba(59,130,246,0.12);
+      --radius: 12px;
+      --radius-lg: 16px;
+      --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    @media (prefers-color-scheme: light){
-      :root{
-        --bg:#ffffff;
-        --text: rgba(0,0,0,.90);
-        --muted: rgba(0,0,0,.62);
-        --faint: rgba(0,0,0,.42);
-        --panel: rgba(0,0,0,.03);
-        --panel2: rgba(0,0,0,.05);
-        --border: rgba(0,0,0,.12);
-        --shadow: 0 20px 70px rgba(0,0,0,.12);
-        --glow: 0 0 0 1px rgba(0,0,0,.08), 0 14px 44px rgba(0,0,0,.12);
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #fafafa;
+        --surface: #ffffff;
+        --surface-2: #f4f4f5;
+        --border: rgba(0,0,0,0.08);
+        --border-hover: rgba(0,0,0,0.15);
+        --text: rgba(0,0,0,0.90);
+        --text-secondary: rgba(0,0,0,0.60);
+        --text-tertiary: rgba(0,0,0,0.40);
+        --accent-subtle: rgba(59,130,246,0.08);
       }
     }
 
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
-      overflow-x:hidden;
-    }
-
-    /* ==========================================
-       GUARANTEE: Phase 1 -> Phase 2 -> Site
-       (no flashes, site hidden until ready)
-       ========================================== */
-    body.is-loading main.wrap{
-      opacity: 0;
-      transform: translateY(10px);
-      pointer-events: none;
-      user-select: none;
-    }
-    body.is-ready main.wrap{
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-      user-select: auto;
-      transition: opacity .55s cubic-bezier(.2,.8,.2,1), transform .55s cubic-bezier(.2,.8,.2,1);
-    }
-
-    /* =========================
-       TWO-PHASE LOADER OVERLAYS
-       ========================= */
-    .overlay-full{
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      display: grid;
-      place-items: center;
-      padding: 20px;
-      opacity: 1;
-      visibility: visible;
-      transition: opacity .55s cubic-bezier(.2,.8,.2,1), visibility .55s cubic-bezier(.2,.8,.2,1);
-    }
-    .overlay-full.hide{
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    /* Phase 1 (green progress visible, but not too long) */
-    #phase1{
-      background:
-        radial-gradient(1200px 800px at 20% 0%, rgba(124,58,237,.22), transparent 55%),
-        radial-gradient(1100px 780px at 90% 20%, rgba(6,182,212,.16), transparent 55%),
-        radial-gradient(1000px 700px at 60% 110%, rgba(34,197,94,.12), transparent 52%),
-        rgba(0,0,0,.86);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-    }
-
-    .phase1-card{
-      width: min(520px, 100%);
-      border-radius: 26px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      box-shadow: 0 30px 140px rgba(0,0,0,.55);
-      padding: 22px;
-      position: relative;
-      overflow: hidden;
-    }
-    .phase1-card::before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background:
-        radial-gradient(700px 250px at 20% 0%, rgba(124,58,237,.22), transparent 55%),
-        radial-gradient(650px 240px at 95% 40%, rgba(6,182,212,.18), transparent 55%);
-      opacity: .65;
-      pointer-events:none;
-    }
-
-    .phase1-top{
-      display:flex;
-      align-items:center;
-      gap: 14px;
-      position: relative;
-      z-index: 1;
-    }
-    .phase1-logo{
-      width: 44px; height: 44px;
-      border-radius: 16px;
-      background: conic-gradient(from 210deg, var(--a1), var(--a2), var(--a3), var(--a4), var(--a1));
-      box-shadow: 0 0 0 1px rgba(255,255,255,.18), 0 14px 30px rgba(0,0,0,.35);
-      position:relative;
-      overflow:hidden;
-      flex: 0 0 auto;
-    }
-    .phase1-logo::after{
-      content:"";
-      position:absolute;
-      inset:-40%;
-      background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.38) 50%, transparent 60%);
-      transform: translateX(-40%) rotate(10deg);
-      animation: shimmer 3.4s ease-in-out infinite;
-      opacity:.55;
-      pointer-events:none;
-    }
-
-    .phase1-title{
-      margin:0;
-      font-size: 1.15rem;
-      letter-spacing: -0.02em;
-      color: rgba(255,255,255,.92);
-    }
-    .phase1-sub{
-      margin: 4px 0 0;
-      color: rgba(255,255,255,.68);
-      font-size: .95rem;
-      line-height: 1.4;
-    }
-
-    .phase1-row{
-      margin-top: 16px;
-      display:flex;
-      align-items:center;
-      justify-content: space-between;
-      gap: 12px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .phase1-ring{
-      width: 44px; height: 44px;
-      border-radius: 999px;
-      position: relative;
-      flex: 0 0 auto;
-    }
-    .phase1-ring::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius: 999px;
-      background: conic-gradient(from 90deg, var(--a1), var(--a2), var(--a3), var(--a4), var(--a1));
-      mask: radial-gradient(circle at center, transparent 58%, black 60%);
-      opacity: .9;
-      animation: spin 1.1s linear infinite;
-    }
-
-    .phase1-progress{
-      flex: 1;
-      height: 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.12);
-      overflow:hidden;
-      position: relative;
-    }
-
-    .phase1-bar{
-      width: 0%;
-      height: 100%;
-      border-radius: 999px;
-      background: linear-gradient(90deg, rgba(34,197,94,.65), rgba(34,197,94,.95));
-      box-shadow: 0 0 0 1px rgba(34,197,94,.20), 0 0 26px rgba(34,197,94,.28);
-      transition: width .22s ease;
-      position: relative;
-      overflow:hidden;
-    }
-    .phase1-bar::after{
-      content:"";
-      position:absolute;
-      inset:-40%;
-      background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.18) 50%, transparent 60%);
-      transform: translateX(-40%) rotate(10deg);
-      animation: shimmer 1.35s ease-in-out infinite;
-      opacity:.75;
-      pointer-events:none;
-    }
-
-    .phase1-pct{
-      font-variant-numeric: tabular-nums;
-      color: rgba(255,255,255,.70);
-      font-weight: 800;
-      min-width: 44px;
-      text-align: right;
-    }
-
-    /* Phase 2 (Brunson) */
-    #phase2{
-      background:
-        radial-gradient(1000px 700px at 30% 10%, rgba(124,58,237,.18), transparent 55%),
-        radial-gradient(900px 650px at 80% 30%, rgba(6,182,212,.12), transparent 55%),
-        rgba(0,0,0,.90);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-    }
-
-    .brunson-wrap{
-      width: min(980px, 100%);
-      border-radius: 28px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.04);
-      box-shadow: 0 40px 160px rgba(0,0,0,.65);
-      overflow: hidden;
-      position: relative;
-    }
-
-    .brunson-media{
-      height: min(62vh, 520px);
-      background-color: rgba(255,255,255,.04); /* fallback */
-      background-image:
-        linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.62)),
-        var(--brunson-url);
-      background-size: cover;
-      background-position: center 18%;
-      position: relative;
-    }
-
-    .brunson-media::after{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background:
-        radial-gradient(700px 260px at 20% 0%, rgba(34,197,94,.18), transparent 55%),
-        radial-gradient(700px 260px at 90% 30%, rgba(124,58,237,.18), transparent 55%);
-      opacity: .65;
-      pointer-events:none;
-    }
-
-    .brunson-copy{
-      padding: 18px 18px 20px;
-      display:flex;
-      align-items:flex-end;
-      justify-content: space-between;
-      gap: 14px;
-      background: rgba(0,0,0,.55);
-    }
-
-    .brunson-copy h2{
-      margin:0;
-      font-size: clamp(1.05rem, 3.6vw, 1.55rem);
-      letter-spacing: -0.02em;
-      color: rgba(255,255,255,.94);
-      line-height: 1.15;
-    }
-
-    .brunson-copy p{
-      margin: 6px 0 0;
-      color: rgba(255,255,255,.70);
-      font-size: .95rem;
-    }
-
-    .brunson-badge{
-      flex: 0 0 auto;
-      display:inline-flex;
-      align-items:center;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.88);
-      font-weight: 800;
-      letter-spacing: .01em;
-      white-space: nowrap;
-    }
-    .brunson-dot{
-      width: 10px; height: 10px;
-      border-radius: 999px;
-      background: rgba(34,197,94,.95);
-      box-shadow: 0 0 0 4px rgba(34,197,94,.14), 0 0 22px rgba(34,197,94,.35);
-      animation: pulse 1.35s ease-in-out infinite;
-    }
-
-    /* Mobile: make Brunson screen feel good */
-    @media (max-width: 640px){
-      .phase1-card{ padding: 18px; border-radius: 22px; }
-      .phase1-title{ font-size: 1.05rem; }
-      .phase1-sub{ font-size: .92rem; }
-      .phase1-row{ gap: 10px; }
-      .phase1-ring{ width: 40px; height: 40px; }
-      .brunson-copy{
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .brunson-badge{ align-self: flex-start; }
-      .brunson-media{ height: min(58vh, 460px); }
-    }
-
-    /* ===== Background ambience ===== */
-    .bg{
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      z-index:-2;
-      overflow:hidden;
-    }
-    .orb{
-      position:absolute;
-      width: 640px;
-      height: 640px;
-      filter: blur(70px);
-      opacity:.30;
-      border-radius: 999px;
-      mix-blend-mode: screen;
-      transform: translate3d(0,0,0);
-      animation: drift 18s ease-in-out infinite;
-    }
-    .orb.one{
-      left:-220px; top:-240px;
-      background: radial-gradient(circle at 30% 30%, var(--a1), transparent 62%);
-      animation-duration: 22s;
-    }
-    .orb.two{
-      right:-260px; top: 60px;
-      background: radial-gradient(circle at 30% 30%, var(--a2), transparent 62%);
-      animation-duration: 26s;
-    }
-    .orb.three{
-      left: 18%; bottom:-320px;
-      background: radial-gradient(circle at 30% 30%, var(--a3), transparent 62%);
-      animation-duration: 30s;
-      opacity:.22;
-    }
-    .orb.four{
-      right: 8%; bottom:-360px;
-      background: radial-gradient(circle at 30% 30%, var(--a4), transparent 62%);
-      animation-duration: 32s;
-      opacity:.14;
-    }
-    @keyframes drift{
-      0%,100%{ transform: translate(0,0) scale(1); }
-      50%{ transform: translate(40px,-26px) scale(1.06); }
-    }
-
-    .gridlines{
-      position:fixed;
-      inset:0;
-      z-index:-1;
-      pointer-events:none;
-      opacity:.14;
-      background:
-        linear-gradient(to right, rgba(255,255,255,.05) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255,255,255,.05) 1px, transparent 1px);
-      background-size: 80px 80px;
-      mask-image: radial-gradient(60% 55% at 50% 20%, black 45%, transparent 72%);
-    }
-    @media (prefers-color-scheme: light){
-      .gridlines{ opacity:.10; }
-    }
-
-    .grain{
-      position:fixed;
-      inset:0;
-      z-index:-1;
-      pointer-events:none;
-      opacity:.10;
-      background-image:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
-      background-size: 240px 240px;
-      mix-blend-mode: overlay;
-    }
-
-    .spotlight{
-      position:fixed;
-      inset:-40vmax;
-      z-index:-1;
-      pointer-events:none;
-      background: radial-gradient(720px 720px at var(--mx,50%) var(--my,50%),
-        rgba(124,58,237,.14),
-        rgba(6,182,212,.08),
-        transparent 65%);
-      transition: background .06s linear;
-    }
-
-    /* ===== Layout ===== */
-    .wrap{
-      max-width: 1040px;
-      margin: 0 auto;
-      padding: 26px 22px 92px;
-    }
-
-    /* Header */
-    .header{
-      position: sticky;
-      top: 14px;
-      z-index: 50;
-      display:flex;
-      align-items:center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 12px 14px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(0,0,0,.18);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      box-shadow: 0 12px 60px rgba(0,0,0,.20);
-    }
-    @media (prefers-color-scheme: light){
-      .header{ background: rgba(255,255,255,.74); }
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap: 12px;
-      min-width: 220px;
-    }
-    .logo{
-      width: 38px; height: 38px;
-      border-radius: 14px;
-      background: conic-gradient(from 210deg, var(--a1), var(--a2), var(--a3), var(--a4), var(--a1));
-      box-shadow: 0 0 0 1px rgba(255,255,255,.18), 0 10px 26px rgba(0,0,0,.28);
-      position:relative;
-      overflow:hidden;
-      flex: 0 0 auto;
-    }
-    .logo::after{
-      content:"";
-      position:absolute;
-      inset:-40%;
-      background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.40) 50%, transparent 60%);
-      transform: translateX(-40%) rotate(10deg);
-      animation: shimmer 3.8s ease-in-out infinite;
-      opacity:.55;
-      pointer-events:none;
-    }
-
-    .brand b{
-      display:block;
-      letter-spacing:-0.02em;
-      line-height:1.1;
-    }
-    .brand small{
-      display:block;
-      margin-top: 2px;
-      color: var(--faint);
-      font-size: .88rem;
-    }
-
-    .actions{
-      display:flex;
-      gap: 10px;
-      align-items:center;
-      justify-content:flex-end;
-      flex-wrap: wrap;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.04);
-      color: var(--text);
-      text-decoration:none;
-      font-weight: 760;
-      letter-spacing: .01em;
-      transition: transform .18s ease, background .18s ease, border-color .18s ease;
-      position:relative;
-      overflow:hidden;
-      will-change: transform;
-      white-space: nowrap;
-    }
-    .pill svg{
-      width:18px;
-      height:18px;
-      opacity:.9;
-      flex: 0 0 auto;
-      flex-shrink: 0; /* ✅ icon never disappears */
-    }
-    .pill::before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background: radial-gradient(240px 120px at var(--px,30%) var(--py,50%),
-        rgba(255,255,255,.18),
-        transparent 60%);
-      opacity: 0;
-      transition: opacity .18s ease;
-      pointer-events:none;
-    }
-    .pill:hover{
-      transform: translateY(-2px);
-      background: rgba(255,255,255,.07);
-      border-color: rgba(255,255,255,.22);
-    }
-    .pill:hover::before{ opacity: 1; }
-    .pill.primary{
-      border-color: rgba(255,255,255,.22);
-      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
-    }
-
-    /* Mobile header: no crowding, wraps cleanly */
-    @media (max-width: 640px){
-      .wrap{ padding: 18px 14px 74px; }
-      .header{
-        flex-wrap: wrap;
-        gap: 10px;
-        padding: 10px 12px;
-      }
-      .brand{ min-width: 0; }
-      .brand small{ display:none; }
-      .actions{
-        width: 100%;
-        justify-content: flex-start;
-        gap: 8px;
-      }
-      .pill{
-        padding: 9px 10px;
-        gap: 8px;
-        font-size: .95rem;
-      }
-    }
-
-    /* Hero */
-    .hero{
-      margin-top: 18px;
-      padding: 34px 28px;
-      border-radius: calc(var(--radius) + 6px);
-      border: 1px solid var(--border);
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
-      box-shadow: var(--glow);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      position:relative;
-      overflow:hidden;
-    }
-    .hero::before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background:
-        radial-gradient(1100px 420px at 18% 0%, rgba(124,58,237,.22), transparent 55%),
-        radial-gradient(1000px 420px at 90% 20%, rgba(6,182,212,.18), transparent 55%),
-        radial-gradient(1000px 420px at 65% 110%, rgba(34,197,94,.12), transparent 50%);
-      pointer-events:none;
-      z-index:0;
-    }
-    .hero > *{ position:relative; z-index:1; }
-
-    .hero h1{
-      margin:0;
-      font-size: clamp(2.25rem, 6.2vw, 3.6rem);
-      letter-spacing:-0.04em;
-      line-height:1.02;
-      display:inline-block;
-      position:relative;
-    }
-    .hero h1::after{
-      content:"";
-      position:absolute;
-      left:0;
-      bottom:-12px;
-      width: min(460px, 100%);
-      height: 8px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, var(--a1), var(--a2), var(--a3), var(--a4));
-      opacity:.62;
-      transform-origin:left;
-      transform: scaleX(.68);
-      animation: underline 5.2s ease-in-out infinite;
-    }
-    @keyframes underline{
-      0%,100%{ transform: scaleX(.62); opacity:.54; }
-      50%{ transform: scaleX(1); opacity:.74; }
-    }
-
-    .tagline{
-      margin: 18px 0 0;
-      color: var(--muted);
-      font-size: 1.08rem;
       line-height: 1.6;
-      max-width: 70ch;
+      min-height: 100vh;
     }
 
-    /* Sections */
-    .section{
-      margin-top: 18px;
-      padding: 22px;
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 80px 24px 120px;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 48px 20px 80px;
+      }
+    }
+
+    .header {
+      margin-bottom: 64px;
+    }
+
+    .name {
+      font-size: 2rem;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      margin-bottom: 12px;
+    }
+
+    .bio {
+      color: var(--text-secondary);
+      font-size: 1.125rem;
+      max-width: 480px;
+      margin-bottom: 24px;
+    }
+
+    .links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      padding: 8px 14px;
       border-radius: var(--radius);
-      background: rgba(255,255,255,.04);
       border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
-    .section-head{
-      display:flex;
-      align-items:baseline;
-      justify-content: space-between;
-      gap: 14px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-    }
-    .section-title{
-      margin:0;
-      font-size: 1.15rem;
-      letter-spacing:-0.01em;
-    }
-    .section-sub{
-      margin:0;
-      color: var(--faint);
-      font-size:.95rem;
+      background: var(--surface);
+      transition: all var(--transition);
     }
 
-    /* Timeline */
-    .timeline{
-      position:relative;
-      padding-left: 18px;
-    }
-    .timeline::before{
-      content:"";
-      position:absolute;
-      left: 6px;
-      top: 4px;
-      bottom: 4px;
-      width: 2px;
-      background: linear-gradient(to bottom,
-        rgba(255,255,255,0),
-        rgba(255,255,255,.35),
-        rgba(255,255,255,0)
-      );
-    }
-    .job{
-      position:relative;
-      padding: 14px 14px 14px 18px;
-      margin: 10px 0;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
-      transition: transform .18s ease, background .18s ease, border-color .18s ease;
-      transform-style: preserve-3d;
-      will-change: transform;
-    }
-    .job:hover{
-      transform: translateY(-2px);
-      background: rgba(255,255,255,.06);
-      border-color: rgba(255,255,255,.18);
-    }
-    .job::before{
-      content:"";
-      position:absolute;
-      left:-1px;
-      top:18px;
-      width:10px;height:10px;
-      border-radius:999px;
-      background: rgba(255,255,255,.85);
-      box-shadow: 0 0 0 4px rgba(255,255,255,.10);
-      transform: translateX(-18px);
-    }
-    .job.featured{
-      border-color: rgba(255,255,255,.22);
-      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
-    }
-    .job.featured::before{
-      background: linear-gradient(135deg, var(--a1), var(--a2));
-      box-shadow: 0 0 0 4px rgba(255,255,255,.10), 0 0 22px rgba(124,58,237,.32);
-    }
-
-    .job-top{
-      display:flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: baseline;
-      flex-wrap: wrap;
-    }
-    .job-title{ margin:0; font-weight: 860; letter-spacing:-0.01em; }
-    .job-dates{ margin:0; color: var(--faint); font-size:.92rem; white-space:nowrap; }
-    .job-role{ margin:6px 0 0; color: var(--muted); }
-
-    /* Portfolio grid */
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 12px;
-    }
-    @media (max-width: 860px){
-      .grid{ grid-template-columns: 1fr; }
-    }
-
-    .card{
-      display:block;
-      padding: 16px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.03);
-      text-decoration:none;
+    .link:hover {
       color: var(--text);
-      transition: transform .18s ease, background .18s ease, border-color .18s ease;
-      position:relative;
-      overflow:hidden;
-      transform-style: preserve-3d;
-      will-change: transform;
-    }
-    .card::before{
-      content:"";
-      position:absolute;
-      inset:-1px;
-      background:
-        radial-gradient(460px 200px at 20% 0%, rgba(124,58,237,.18), transparent 60%),
-        radial-gradient(460px 200px at 100% 60%, rgba(6,182,212,.16), transparent 55%);
-      opacity:0;
-      transition: opacity .22s ease;
-      pointer-events:none;
-    }
-    .card::after{
-      content:"";
-      position:absolute;
-      inset:-40%;
-      background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.18) 50%, transparent 60%);
-      transform: translateX(-30%) rotate(10deg);
-      opacity:0;
-      transition: opacity .25s ease;
-      pointer-events:none;
-    }
-    .card:hover{
-      transform: translateY(-3px);
-      background: rgba(255,255,255,.06);
-      border-color: rgba(255,255,255,.20);
-    }
-    .card:hover::before{ opacity: 1; }
-    .card:hover::after{ opacity: 1; }
-
-    .card h3{
-      margin:0 0 8px;
-      font-size: 1.04rem;
-      line-height:1.25;
-      letter-spacing:-0.01em;
-      position:relative;
-      z-index:1;
-    }
-    .date{
-      margin:0;
-      font-size:.92rem;
-      color: var(--muted);
-      position:relative;
-      z-index:1;
+      border-color: var(--border-hover);
+      background: var(--surface-2);
     }
 
-    /* Reveal */
-    .reveal{
-      opacity:0;
-      transform: translateY(14px);
-      transition: opacity .75s cubic-bezier(.2,.8,.2,1), transform .75s cubic-bezier(.2,.8,.2,1);
-      will-change: opacity, transform;
-    }
-    .reveal.show{ opacity:1; transform: translateY(0); }
-
-    /* Animations */
-    @keyframes spin{ to { transform: rotate(360deg); } }
-    @keyframes shimmer{
-      0%,100%{ transform: translateX(-40%) rotate(10deg); }
-      50%{ transform: translateX(40%) rotate(10deg); }
-    }
-    @keyframes pulse{
-      0%,100%{ transform: scale(1); opacity:.9; }
-      50%{ transform: scale(1.22); opacity:1; }
+    .link svg {
+      width: 16px;
+      height: 16px;
+      opacity: 0.7;
     }
 
-    /* Reduced motion */
-    @media (prefers-reduced-motion: reduce){
-      .orb, .logo::after, .hero h1::after { animation:none !important; }
-      .phase1-ring::after, .phase1-logo::after, .phase1-bar::after, .brunson-dot{ animation:none !important; }
-      .reveal{ opacity:1; transform:none; transition:none; }
-      .spotlight{ display:none; }
-      .card, .job, .pill{ transition:none; }
+    .section {
+      margin-bottom: 56px;
+    }
+
+    .section:last-child {
+      margin-bottom: 0;
+    }
+
+    .section-title {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-tertiary);
+      margin-bottom: 20px;
+    }
+
+    .experience-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .experience-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: baseline;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .experience-item:first-child {
+      padding-top: 0;
+    }
+
+    .experience-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .experience-company {
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .experience-role {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      margin-top: 2px;
+    }
+
+    .experience-date {
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 480px) {
+      .experience-item {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+      .experience-date {
+        order: -1;
+        font-size: 0.8125rem;
+      }
+    }
+
+    .writing-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .writing-item {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+      transition: all var(--transition);
+    }
+
+    .writing-item:first-child {
+      padding-top: 0;
+    }
+
+    .writing-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .writing-item:hover .writing-title {
+      color: var(--accent);
+    }
+
+    .writing-title {
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      margin-bottom: 4px;
+      transition: color var(--transition);
+    }
+
+    .writing-date {
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+    }
+
+    .gradient-line {
+      width: 48px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), #8b5cf6);
+      border-radius: 2px;
+      margin-bottom: 24px;
+      opacity: 0.8;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate {
+      animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      opacity: 0;
+    }
+
+    .animate:nth-child(1) { animation-delay: 0ms; }
+    .animate:nth-child(2) { animation-delay: 80ms; }
+    .animate:nth-child(3) { animation-delay: 160ms; }
+    .animate:nth-child(4) { animation-delay: 240ms; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .animate {
+        animation: none;
+        opacity: 1;
+      }
     }
   </style>
 </head>
-
-<body class="is-loading">
-  <!-- PHASE 1 -->
-  <div class="overlay-full" id="phase1" aria-hidden="true">
-    <div class="phase1-card">
-      <div class="phase1-top">
-        <div class="phase1-logo" aria-hidden="true"></div>
-        <div>
-          <p class="phase1-title">Benjamin Sturisky</p>
-          <p class="phase1-sub">Loading…</p>
-        </div>
-      </div>
-
-      <div class="phase1-row">
-        <div class="phase1-ring" aria-hidden="true"></div>
-        <div class="phase1-progress" aria-hidden="true"><div class="phase1-bar" id="p1bar"></div></div>
-        <div class="phase1-pct" id="p1pct">0%</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PHASE 2 -->
-  <div class="overlay-full hide" id="phase2" aria-hidden="true">
-    <div class="brunson-wrap">
-      <div class="brunson-media" role="img" aria-label="Jalen Brunson photo"></div>
-      <div class="brunson-copy">
-        <div>
-          <h2>Jalen Brunson is the goat — remember that.</h2>
-          <p>Proceeding…</p>
-        </div>
-        <div class="brunson-badge"><span class="brunson-dot" aria-hidden="true"></span> Verified</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Background -->
-  <div class="bg" aria-hidden="true">
-    <div class="orb one"></div>
-    <div class="orb two"></div>
-    <div class="orb three"></div>
-    <div class="orb four"></div>
-  </div>
-  <div class="spotlight" aria-hidden="true"></div>
-  <div class="gridlines" aria-hidden="true"></div>
-  <div class="grain" aria-hidden="true"></div>
-
-  <!-- Site -->
-  <main class="wrap">
-    <header class="header reveal">
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <div>
-          <b>Benjamin</b>
-          <small>Personal site</small>
-        </div>
-      </div>
-
-      <div class="actions">
-        <a class="pill primary" href="https://benjaminsturisky.substack.com" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M7 7h10v10H7z" stroke="currentColor" stroke-width="1.6"/>
-            <path d="M9 9h6M9 12h6M9 15h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+<body>
+  <main class="container">
+    <header class="header animate">
+      <div class="gradient-line"></div>
+      <h1 class="name">Benjamin Sturisky</h1>
+      <p class="bio">Research & Growth. Writing about markets, incentives, and crypto infrastructure.</p>
+      <nav class="links">
+        <a class="link" href="https://benjaminsturisky.substack.com" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
           </svg>
           Substack
         </a>
-
-        <a class="pill" href="https://x.com/bsturisky" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.6l-5.2-6.7L5.7 22H2.5l7.3-8.4L1 2h6.8l4.7 6.1L18.9 2Z"
-                  stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+        <a class="link" href="https://x.com/bsturisky" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
           </svg>
           X
         </a>
-
-        <a class="pill" href="https://t.me/bsturisky" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M21.7 4.2 3.4 11.2c-1.3.5-1.3 1.2-.2 1.5l4.7 1.5 1.8 5.6c.2.6.1.8.7.8.5 0 .7-.2 1-.5l2.3-2.2 4.8 3.5c.9.5 1.5.2 1.7-.8l3-14c.3-1.2-.5-1.8-1.5-1.4Z"
-                  stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-            <path d="M8 13.9 18.7 7.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        <a class="link" href="https://t.me/bsturisky" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
           </svg>
           Telegram
         </a>
-      </div>
+      </nav>
     </header>
 
-    <section class="hero reveal">
-      <h1>Benjamin Sturisky</h1>
-      <p class="tagline">
-        Research / Growth. Writing about markets, incentives, and crypto infrastructure.
-      </p>
-    </section>
-
-    <section class="section reveal">
-      <div class="section-head">
-        <h2 class="section-title">Work History</h2>
-        <p class="section-sub">Most recent first</p>
-      </div>
-
-      <div class="timeline">
-        <div class="job featured">
-          <div class="job-top">
-            <p class="job-title">Starknet Foundation</p>
-            <p class="job-dates">2025 – Present</p>
+    <section class="section animate">
+      <h2 class="section-title">Experience</h2>
+      <div class="experience-list">
+        <div class="experience-item">
+          <div>
+            <div class="experience-company">Starknet Foundation</div>
+            <div class="experience-role">Research & Growth</div>
           </div>
-          <p class="job-role">Research/Growth</p>
+          <div class="experience-date">2025 – Present</div>
         </div>
-
-        <div class="job">
-          <div class="job-top">
-            <p class="job-title">Delphi Digital</p>
-            <p class="job-dates">2024 – 2025</p>
+        <div class="experience-item">
+          <div>
+            <div class="experience-company">Delphi Digital</div>
+            <div class="experience-role">Research Analyst</div>
           </div>
-          <p class="job-role">Research Analyst</p>
+          <div class="experience-date">2024 – 2025</div>
         </div>
-
-        <div class="job">
-          <div class="job-top">
-            <p class="job-title">Win Win Gaming</p>
-            <p class="job-dates">2023 – 2024</p>
+        <div class="experience-item">
+          <div>
+            <div class="experience-company">Win Win Gaming</div>
+            <div class="experience-role">Consultant</div>
           </div>
-          <p class="job-role">Consultant</p>
+          <div class="experience-date">2023 – 2024</div>
         </div>
       </div>
     </section>
 
-    <section class="section reveal">
-      <div class="section-head">
-        <h2 class="section-title">Portfolio</h2>
-        <p class="section-sub">Selected posts</p>
-      </div>
-
-      <div class="grid">
-        <a class="card reveal" href="https://benjaminsturisky.substack.com/p/prediction-markets-are-sub-optimal" target="_blank" rel="noopener">
-          <h3>Prediction markets are suboptimal sports betting vehicles</h3>
-          <p class="date">September 4th, 2025</p>
+    <section class="section animate">
+      <h2 class="section-title">Writing</h2>
+      <div class="writing-list">
+        <a class="writing-item" href="https://benjaminsturisky.substack.com/p/prediction-markets-are-sub-optimal" target="_blank" rel="noopener noreferrer">
+          <div class="writing-title">Prediction Markets Are Suboptimal Sports Betting Vehicles</div>
+          <div class="writing-date">September 2024</div>
         </a>
-
-        <a class="card reveal" href="https://benjaminsturisky.substack.com/p/do-prediction-markets-work" target="_blank" rel="noopener">
-          <h3>Do Prediction Markets Work?</h3>
-          <p class="date">July 31, 2024</p>
+        <a class="writing-item" href="https://benjaminsturisky.substack.com/p/do-prediction-markets-work" target="_blank" rel="noopener noreferrer">
+          <div class="writing-title">Do Prediction Markets Work?</div>
+          <div class="writing-date">July 2024</div>
         </a>
-
-        <a class="card reveal" href="https://benjaminsturisky.substack.com/p/solving-liquidity-fragmentation-through" target="_blank" rel="noopener">
-          <h3>Solving liquidity fragmentation through chain abstraction</h3>
-          <p class="date">July 28, 2024</p>
+        <a class="writing-item" href="https://benjaminsturisky.substack.com/p/solving-liquidity-fragmentation-through" target="_blank" rel="noopener noreferrer">
+          <div class="writing-title">Solving Liquidity Fragmentation Through Chain Abstraction</div>
+          <div class="writing-date">July 2024</div>
         </a>
-
-        <a class="card reveal" href="https://benjaminsturisky.substack.com/p/solving-liquidity-fragmentation-through" target="_blank" rel="noopener">
-          <h3>Prediction Markets Explained</h3>
-          <p class="date">May 27, 2024</p>
+        <a class="writing-item" href="https://benjaminsturisky.substack.com/p/prediction-markets-explained" target="_blank" rel="noopener noreferrer">
+          <div class="writing-title">Prediction Markets Explained</div>
+          <div class="writing-date">May 2024</div>
         </a>
-
-        <a class="card reveal" href="https://benjaminsturisky.substack.com/p/network-success-token-success" target="_blank" rel="noopener">
-          <h3>Network Success != Token Success</h3>
-          <p class="date">May 13, 2024</p>
+        <a class="writing-item" href="https://benjaminsturisky.substack.com/p/network-success-token-success" target="_blank" rel="noopener noreferrer">
+          <div class="writing-title">Network Success ≠ Token Success</div>
+          <div class="writing-date">May 2024</div>
         </a>
-
-        <a class="card reveal" href="https://benjaminsturisky.substack.com/p/the-power-of-incentives" target="_blank" rel="noopener">
-          <h3>The Power of Incentives</h3>
-          <p class="date">April 14, 2024</p>
+        <a class="writing-item" href="https://benjaminsturisky.substack.com/p/the-power-of-incentives" target="_blank" rel="noopener noreferrer">
+          <div class="writing-title">The Power of Incentives</div>
+          <div class="writing-date">April 2024</div>
         </a>
       </div>
     </section>
   </main>
-
-  <script>
-    // Spotlight (desktop / non-reduced motion)
-    (function(){
-      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (prefersReduced) return;
-      const spot = document.querySelector(".spotlight");
-      if (!spot) return;
-      window.addEventListener("mousemove", (e) => {
-        const x = (e.clientX / window.innerWidth) * 100;
-        const y = (e.clientY / window.innerHeight) * 100;
-        spot.style.setProperty("--mx", x + "%");
-        spot.style.setProperty("--my", y + "%");
-      }, { passive: true });
-    })();
-
-    // Hover sheen on pills
-    document.querySelectorAll(".pill").forEach(btn => {
-      btn.addEventListener("mousemove", (e) => {
-        const r = btn.getBoundingClientRect();
-        const x = ((e.clientX - r.left) / r.width) * 100;
-        const y = ((e.clientY - r.top) / r.height) * 100;
-        btn.style.setProperty("--px", x + "%");
-        btn.style.setProperty("--py", y + "%");
-      }, { passive: true });
-    });
-
-    // Scroll reveal
-    (function(){
-      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const items = Array.from(document.querySelectorAll(".reveal"));
-      if (prefersReduced){
-        items.forEach(el => el.classList.add("show"));
-        return;
-      }
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-          if (e.isIntersecting){
-            e.target.classList.add("show");
-            io.unobserve(e.target);
-          }
-        });
-      }, { threshold: 0.12 });
-
-      items.forEach((el, idx) => {
-        if (el.classList.contains("card")) el.style.transitionDelay = (idx % 6) * 0.05 + "s";
-        io.observe(el);
-      });
-    })();
-
-    // Subtle 3D tilt (desktop only-ish)
-    (function(){
-      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (prefersReduced) return;
-
-      const isCoarse = window.matchMedia("(pointer: coarse)").matches; // touch devices
-      if (isCoarse) return;
-
-      function attachTilt(selector){
-        document.querySelectorAll(selector).forEach(el => {
-          el.addEventListener("mousemove", (e) => {
-            const r = el.getBoundingClientRect();
-            const px = (e.clientX - r.left) / r.width;
-            const py = (e.clientY - r.top) / r.height;
-            const rotY = (px - 0.5) * 7;
-            const rotX = (0.5 - py) * 7;
-            el.style.transform = `translateY(-3px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-          }, { passive:true });
-
-          el.addEventListener("mouseleave", () => {
-            el.style.transform = "";
-          });
-        });
-      }
-      attachTilt(".card");
-      attachTilt(".job");
-    })();
-
-    // ==========================================
-    // TWO-PHASE LOADER CONTROL (NO FLASHES)
-    // Phase 1 -> Brunson -> Site
-    // ==========================================
-    (function(){
-      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-      const phase1 = document.getElementById("phase1");
-      const phase2 = document.getElementById("phase2");
-      const p1bar  = document.getElementById("p1bar");
-      const p1pct  = document.getElementById("p1pct");
-
-      if (!phase1 || !phase2 || !p1bar || !p1pct) return;
-
-      // timing
-      const MIN_PHASE1_MS  = 1600; // reduced (was too long)
-      const PHASE1_CAP     = 86;
-      const SNAP_MS        = 220;
-      const PHASE2_HOLD_MS = 1400;
-      const FADE_MS        = 560;  // should match overlay fade
-
-      // preload Brunson (match your working URL)
-      const BRUNSON_SRC = "/902tvmjs891f1.jpeg";
-      let brunsonReady = false;
-      const img = new Image();
-      img.onload = () => brunsonReady = true;
-      img.onerror = () => brunsonReady = true;
-      img.src = BRUNSON_SRC;
-
-      if (prefersReduced){
-        phase1.classList.add("hide");
-        phase2.classList.add("hide");
-        document.body.classList.remove("is-loading");
-        document.body.classList.add("is-ready");
-        return;
-      }
-
-      let start = performance.now();
-      let loaded = false;
-
-      function setP1(v){
-        const clamped = Math.max(0, Math.min(100, v));
-        p1bar.style.width = clamped + "%";
-        p1pct.textContent = Math.round(clamped) + "%";
-      }
-
-      function tick(now){
-        const t = now - start;
-
-        // Ease towards cap
-        const eased = 1 - Math.pow(1 - Math.min(t / MIN_PHASE1_MS, 1), 2.6);
-        setP1(PHASE1_CAP * eased);
-
-        // When min time has passed AND window loaded, transition
-        if (t >= MIN_PHASE1_MS && loaded){
-          setTimeout(() => {
-            setP1(100);
-
-            // IMPORTANT: show Phase 2 FIRST (prevents website flash)
-            setTimeout(() => {
-              phase2.classList.remove("hide");  // Phase 2 covers everything
-              requestAnimationFrame(() => phase1.classList.add("hide")); // crossfade Phase 1 out
-
-              // Hold Phase 2 (wait for image or timeout)
-              const phase2Start = performance.now();
-              const wait = () => {
-                const elapsed = performance.now() - phase2Start;
-
-                if ((brunsonReady && elapsed >= PHASE2_HOLD_MS) || elapsed >= (PHASE2_HOLD_MS + 900)) {
-                  phase2.classList.add("hide");
-
-                  // After Phase 2 fades, reveal the site
-                  setTimeout(() => {
-                    document.body.classList.remove("is-loading");
-                    document.body.classList.add("is-ready");
-                  }, FADE_MS);
-
-                } else {
-                  requestAnimationFrame(wait);
-                }
-              };
-              requestAnimationFrame(wait);
-
-            }, SNAP_MS);
-
-          }, 60);
-
-          return;
-        }
-
-        requestAnimationFrame(tick);
-      }
-
-      requestAnimationFrame(tick);
-
-      window.addEventListener("load", () => {
-        loaded = true;
-      });
-    })();
-  </script>
 </body>
 </html>
+
 
 
 
